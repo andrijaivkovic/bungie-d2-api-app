@@ -1,0 +1,14 @@
+{
+  "name": "bungie-api-app-browser",
+  "version": "1.0.0",
+  "description": "Bungie API Test Application",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html --dist-dir ./dist"
+  },
+  "author": "Andrija Ivkovic",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.5.0"
+  }
+}

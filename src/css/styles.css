@@ -1,0 +1,318 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  font-family: "Poppins", sans-serif;
+  background-color: #1b1b1b;
+}
+
+body {
+  color: #fff;
+  min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+::selection {
+  color: #fff;
+  background: #db762e;
+}
+
+input {
+  font-family: "Poppins", sans-serif;
+}
+
+button {
+  font-family: "Poppins", sans-serif;
+}
+
+input:focus {
+  outline: none;
+}
+
+.btn {
+  border: none;
+  background-color: #db762e;
+  color: #e9e9e9;
+  padding: 15px 54px;
+  border-radius: 30px;
+  font-size: 20px;
+  letter-spacing: 1px;
+  transition: all 0.25s ease-in-out;
+  cursor: pointer;
+}
+
+.btn:hover {
+  transform: scale(1.075);
+}
+
+[class*="level"] {
+  color: #ffeb3b;
+}
+
+[class*="pass"] {
+  color: #09d7d0;
+}
+
+.spinner {
+  animation: rotate 1.25s linear infinite;
+}
+
+/* ANIMATIONS */
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* NAVBAR */
+
+.nav {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 150px;
+}
+
+.nav__logo {
+  margin-left: 75px;
+  justify-self: flex-start;
+}
+
+.nav__refresh {
+  margin-right: 75px;
+  justify-self: flex-end;
+}
+
+.nav__icon {
+  width: 56px;
+  height: 53px;
+  fill: #727272;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  padding-left: 55px;
+  background-color: #424242;
+  border-radius: 30px;
+  transition: all 0.35s;
+}
+
+.search__field {
+  color: #e9e9e9;
+  font-size: 20px;
+  font-weight: 200;
+  letter-spacing: 1px;
+  background: none;
+  border: none;
+  width: 200px;
+}
+
+/* BODY CONTAINER */
+
+.body__container {
+  padding-block: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 5rem;
+}
+
+/* ACCOUNT INFO */
+
+.account-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.account-info__name {
+  display: flex;
+  font-size: 48px;
+  font-weight: 200;
+  justify-content: center;
+}
+
+.account-info__name span {
+  color: #a4a4a4;
+}
+
+.account-info__stats {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+}
+
+.account-info__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat__lower-text {
+  font-size: 16px;
+  font-weight: 200;
+  color: #a4a4a4;
+}
+
+.stat__upper-text {
+  font-size: 24px;
+  font-weight: 200;
+}
+
+/* CARDS */
+
+.cards {
+  display: flex;
+  gap: 120px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  color: #fff;
+  padding: 1.5rem;
+  background-color: #282828;
+  border-radius: 30px;
+  letter-spacing: 1px;
+  transition: 0.25s ease-in-out;
+
+  -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  transform: scale(1.025);
+  -moz-box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* CARD HEADER */
+
+.card__header {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.card__header img {
+  width: 65px;
+  height: 65px;
+}
+
+.card__header--text {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  font-weight: 300;
+  font-size: 16px;
+  gap: 0.2rem;
+}
+
+.header__text--top {
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header__text--bottom {
+  font-size: 14px;
+  display: flex;
+  gap: 1rem;
+}
+
+/* CARD TITLE */
+
+.card__title {
+  justify-content: center;
+  display: flex;
+  color: #b862c8;
+  font-style: italic;
+  border-top: 1px solid #b862c8;
+  border-bottom: 1px solid #b862c8;
+}
+
+.card__title--text {
+  margin-top: 13px;
+  margin-bottom: 13px;
+}
+
+/* CARD WEAPONS */
+
+.card__weapons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-weight: 300;
+  margin-top: 0.75rem;
+}
+
+.card__weapons img {
+  border-radius: 5px;
+  width: 45px;
+  height: 45px;
+}
+
+.card__weapons--weapon {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.weapons__weapon--text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.weapon__text--name {
+  min-width: 185px;
+}
+
+.weapon__text--top {
+  display: flex;
+  font-size: 14px;
+  gap: 0.5rem;
+}
+
+.weapon__text--bottom {
+  color: #cccbcb;
+  font-weight: 200;
+  font-size: 12px;
+}
+
+/* FOOTER
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding-top: auto;
+  min-height: 75px;
+}
+
+.footer__icon {
+  width: 30px;
+  fill: #727272;
+  height: 30px;
+}
+
+.footer__text {
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #727272;
+} */
