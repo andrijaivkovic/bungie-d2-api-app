@@ -73,6 +73,7 @@ const getTriumphScore = async function (membershipType, membershipId) {
 // == APP STATE ==
 
 export const state = {
+  searchQuery: "",
   searchQueries: [],
   account: {
     membershipId: "",
@@ -455,7 +456,7 @@ const generateAccountInfoMarkup = function () {
 };
 
 const loadingSpinnerToggle = function () {
-  const loadingSpinner = document.querySelector(".nav__refresh--icon");
+  const loadingSpinner = document.querySelector(".refresh__btn");
 
   loadingSpinner.classList.toggle("spinner");
 };
@@ -468,9 +469,13 @@ const addSearchQuery = function (searchQuery) {
 
 const charactersParentElement = document.querySelector(".cards");
 const accountParentElement = document.querySelector(".account-info");
+
 const searchButton = document.querySelector(".search__btn");
+const refreshButton = document.querySelector(".refresh__btn");
 
 const init = async function (accName) {
+  loadingSpinnerToggle();
+
   await findAccount(accName);
 
   await getAccountInfo(
@@ -495,26 +500,41 @@ const init = async function (accName) {
 
   console.log(state);
 
+  charactersParentElement.innerHTML = "";
+  accountParentElement.innerHTML = "";
+
   const accountMarkup = generateAccountInfoMarkup();
   accountParentElement.insertAdjacentHTML("beforeend", accountMarkup);
 
   const charactersMarkup = generateCharacterMarkup();
   charactersParentElement.insertAdjacentHTML("beforeend", charactersMarkup);
+
+  loadingSpinnerToggle();
 };
 
 searchButton.addEventListener("click", async function (e) {
   e.preventDefault();
 
-  charactersParentElement.innerHTML = "";
-  accountParentElement.innerHTML = "";
-
   const searchField = document.querySelector(".search__field");
 
   const searchQuery = searchField.value;
+
   searchField.value = "";
+  searchField.blur();
+  // console.log(document.activeElement);
 
   await init(searchQuery);
 
+  state.searchQuery = searchQuery;
+
   // addSearchQuery(searchQuery);
   // console.log(state.searchQueries);
+});
+
+refreshButton.addEventListener("click", async function () {
+  if (!state.searchQuery) return console.log("No search query!");
+
+  console.log(`Refreshing with ${state.searchQuery}`);
+  await init(state.searchQuery);
+  console.log("Refreshed!");
 });
