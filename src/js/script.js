@@ -439,7 +439,7 @@ const generateAccountInfoMarkup = function () {
       </div>
         <div class="account-info__stat account-info__stats--season-pass">
         <div class="stat__upper-text pass">✦ ${
-          state.account.seasonPassRank
+          state.account.seasonPassRank || "//"
         }</div>
         <div class="stat__lower-text">Season Pass</div>
       </div>
@@ -478,23 +478,20 @@ const init = async function (accName) {
 
   await findAccount(accName);
 
-  await getAccountInfo(
-    state.account.membershipType,
-    state.account.membershipId
-  );
+  await Promise.all([
+    getAccountInfo(state.account.membershipType, state.account.membershipId),
+    getCharactersInfo(state.account.membershipType, state.account.membershipId),
+  ]);
 
-  await getCharactersInfo(
-    state.account.membershipType,
-    state.account.membershipId
-  );
+  await Promise.all([
+    formatCharacterInfo(state.account.characters),
+    getWeaponsInfo(state.account.characters),
+  ]);
 
-  await formatCharacterInfo(state.account.characters);
-
-  await getWeaponsInfo(state.account.characters);
-
-  await getWeaponsDetails(state.account.characters);
-
-  await getSeasonalInfo(state.account.characters[0]);
+  await Promise.all([
+    getWeaponsDetails(state.account.characters),
+    // getSeasonalInfo(state.account.characters[0]),
+  ]);
 
   calculateTimePlayed(state.account.characters);
 
