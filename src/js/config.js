@@ -5,7 +5,7 @@ export const API_KEY = "a4f9f7760a3a40528330c6308c22f67e";
 export const API_URL = "https://www.bungie.net/Platform/Destiny2";
 
 // Array of Seal API names and In-Game seal names
-export const seals = [
+export const SEALS = [
   ["Risen", "Risen"],
   ["The Witch Queen", "Gumshoe"],
   ["30th Anniversary", "Vidmaster"],

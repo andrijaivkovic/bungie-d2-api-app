@@ -1,75 +1,10 @@
 // Imports
 import { AJAX } from "./helper";
+import { getEntityInfo } from "./helper";
+import { getItemInstanceInfo } from "./helper";
+
 import { API_URL } from "./config";
-import { seals } from "./config";
-
-// Helpers
-const getEntityInfo = async function (entityType, hashIdentifier, type) {
-  try {
-    const data = await AJAX(
-      `${API_URL}/Manifest/${entityType}/${hashIdentifier}/`
-    );
-
-    if (
-      type === "class" ||
-      type === "gender" ||
-      type === "race" ||
-      type === "seal"
-    )
-      return data.Response.displayProperties.name;
-
-    if (type === "weapon")
-      return [
-        data.Response.displayProperties.name,
-        data.Response.displayProperties.icon,
-        data.Response.itemTypeAndTierDisplayName,
-      ];
-
-    if (type === "emblem") return data.Response.secondaryOverlay;
-
-    if (type === "seasonDefinition")
-      return [
-        data.Response.displayProperties.name,
-        data.Response.displayProperties.icon,
-        data.Response.seasonNumber,
-        data.Response.seasonPassHash,
-      ];
-
-    if (type === "seasonPassDefinition")
-      return [
-        data.Response.rewardProgressionHash,
-        data.Response.prestigeProgressionHash,
-      ];
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const getItemInfo = async function (
-  membershipType,
-  membershipId,
-  itemInstanceId
-) {
-  try {
-    const data = await AJAX(
-      `${API_URL}/${membershipType}/Profile/${membershipId}/Item/${itemInstanceId}/?components=300`
-    );
-    return data.Response.instance.data.primaryStat.value;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const getTriumphScore = async function (membershipType, membershipId) {
-  try {
-    const data = await AJAX(
-      `${API_URL}/${membershipType}/Profile/${membershipId}/?components=900`
-    );
-    return data.Response.profileRecords.data.activeScore;
-  } catch (error) {
-    console.error(error);
-  }
-};
+import { SEALS } from "./config";
 
 // == APP STATE ==
 
@@ -118,21 +53,61 @@ const findAccountById = async function (membershipId) {
 
 const getAccountInfo = async function (membershipType, membershipId) {
   console.time("Get Account Info");
+
   const data = await AJAX(
-    `${API_URL}/${membershipType}/Profile/${membershipId}/?components=100`
+    `${API_URL}/${membershipType}/Profile/${membershipId}/?components=100,200,205,900`
   );
 
-  state.account.activeScore = await getTriumphScore(
-    state.account.membershipType,
-    state.account.membershipId
-  );
-  state.account.dateLastPlayed = data.Response.profile.data.dateLastPlayed;
-  state.account.displayName =
-    data.Response.profile.data.userInfo.bungieGlobalDisplayName;
-  state.account.displayNameCode =
-    data.Response.profile.data.userInfo.bungieGlobalDisplayNameCode;
-  state.account.currentSeason.seasonHash =
-    data.Response.profile.data.currentSeasonHash;
+  const getProfileInfo = function () {
+    state.account.dateLastPlayed = data.Response.profile.data.dateLastPlayed;
+    state.account.displayName =
+      data.Response.profile.data.userInfo.bungieGlobalDisplayName;
+    state.account.displayNameCode =
+      data.Response.profile.data.userInfo.bungieGlobalDisplayNameCode;
+    state.account.currentSeason.seasonHash =
+      data.Response.profile.data.currentSeasonHash;
+  };
+
+  const getTriumphScore = function () {
+    state.account.activeScore = data.Response.profileRecords.data.activeScore;
+  };
+
+  const getCharactersInfo = function () {
+    state.account.characters = Object.values(data.Response.characters.data).map(
+      (character) => {
+        const characterNew = {
+          characterId: character.characterId,
+          class: character.classHash,
+          dateLastPlayed: character.dateLastPlayed,
+          emblem: character.emblemHash,
+          gender: character.genderHash,
+          light: character.light,
+          minutesPlayedTotal: +character.minutesPlayedTotal,
+          race: character.raceHash,
+          equipedSeal: character.titleRecordHash
+            ? character.titleRecordHash
+            : "No Title Equipped",
+        };
+        // console.log(JSON.stringify(characterNew));
+        return characterNew;
+      }
+    );
+  };
+
+  const getWeaponsInfo = function () {
+    Object.values(data.Response.characterEquipment.data).forEach(
+      (characterEquipment, i) => {
+        const characterWeapons = characterEquipment.items.slice(0, 3);
+        state.account.characters[i].weapons = characterWeapons;
+      }
+    );
+  };
+
+  getProfileInfo();
+  getTriumphScore();
+  getCharactersInfo();
+  getWeaponsInfo();
+
   console.timeEnd("Get Account Info");
 };
 
@@ -220,12 +195,12 @@ const calculateLastPlayed = function (lastOnline) {
 const formatSealNames = function (characterArray) {
   characterArray.forEach((character) => {
     if (character.equipedSeal) {
-      const sealIndex = seals.findIndex(
+      const sealIndex = SEALS.findIndex(
         (seal) => seal[0] === character.equipedSeal
       );
       character.equipedSeal =
         sealIndex !== -1
-          ? (character.equipedSeal = seals[sealIndex][1])
+          ? (character.equipedSeal = SEALS[sealIndex][1])
           : character.equipedSeal;
     }
   });
@@ -233,38 +208,8 @@ const formatSealNames = function (characterArray) {
 
 // == CHARACTERS ==
 
-const getCharactersInfo = async function (membershipType, membershipId) {
-  console.time("Get Character Info");
-  try {
-    const data = await AJAX(
-      `${API_URL}/${membershipType}/Profile/${membershipId}/?components=200`
-    );
-
-    state.account.characters = Object.values(data.Response.characters.data).map(
-      (character) => {
-        const characterNew = {
-          characterId: character.characterId,
-          class: character.classHash,
-          dateLastPlayed: character.dateLastPlayed,
-          emblem: character.emblemHash,
-          gender: character.genderHash,
-          light: character.light,
-          minutesPlayedTotal: +character.minutesPlayedTotal,
-          race: character.raceHash,
-          equipedSeal: character.titleRecordHash
-            ? character.titleRecordHash
-            : "No Title Equipped",
-        };
-        console.log(JSON.stringify(characterNew));
-        return characterNew;
-      }
-    );
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 const formatCharacterInfo = async function (characterArray) {
+  console.time("Format Character Info");
   await Promise.all(
     characterArray.map(async (character) => {
       try {
@@ -293,7 +238,7 @@ const formatCharacterInfo = async function (characterArray) {
         );
 
         // Closure
-        const formatEmblem = async function () {
+        const formatSeal = async function () {
           if (character.equipedSeal !== "No Title Equipped") {
             if (character.equipedSeal === 2909250963) {
               character.equipedSeal = "Garden of Salvation";
@@ -313,13 +258,13 @@ const formatCharacterInfo = async function (characterArray) {
           }
         };
 
-        await formatEmblem();
+        await formatSeal();
       } catch (error) {
         console.error(error);
       }
     })
   );
-  console.timeEnd("Get Character Info");
+  console.timeEnd("Format Character Info");
 };
 
 // == GEAR ==
@@ -371,7 +316,7 @@ const getWeaponsDetails = async function (characterArray) {
         await Promise.all(
           character.weapons.map(async (weapon) => {
             try {
-              const lightLevel = await getItemInfo(
+              const lightLevel = await getItemInstanceInfo(
                 state.account.membershipType,
                 state.account.membershipId,
                 weapon.itemInstanceId
@@ -472,9 +417,8 @@ const generateAccountInfoMarkup = function () {
     </div>
     <div class="account-info__stats">
       <div class="account-info__stat account-info__stats--active-triumph-score">
-        <div class="stat__upper-text">${state.account.activeScore.toLocaleString(
-          "en-US"
-        )}</div>
+        <div class="stat__upper-text">
+        ${state.account.activeScore.toLocaleString("en-US")}</div>
         <div class="stat__lower-text">Active Triumph</div>
       </div>
       <div class="account-info__stat account-info__stats--time-played">
@@ -530,22 +474,20 @@ const init = async function (account) {
     await findAccount(account);
   }
 
+  await getAccountInfo(
+    state.account.membershipType,
+    state.account.membershipId
+  );
+
   window.location.hash = state.account.membershipId;
 
-  await Promise.all([
-    getAccountInfo(state.account.membershipType, state.account.membershipId),
-    getCharactersInfo(state.account.membershipType, state.account.membershipId),
-  ]);
+  await formatCharacterInfo(state.account.characters),
+    // getWeaponsInfo(state.account.characters),
 
-  await Promise.all([
-    formatCharacterInfo(state.account.characters),
-    getWeaponsInfo(state.account.characters),
-  ]);
-
-  await Promise.all([
-    getWeaponsDetails(state.account.characters),
-    getSeasonalInfo(state.account.characters[0]),
-  ]);
+    await Promise.all([
+      getWeaponsDetails(state.account.characters),
+      getSeasonalInfo(state.account.characters[0]),
+    ]);
 
   calculateTimePlayed(state.account.characters);
 
