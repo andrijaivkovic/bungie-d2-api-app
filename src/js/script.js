@@ -220,7 +220,9 @@ const calculateLastPlayed = function (lastOnline) {
 const formatSealNames = function (characterArray) {
   characterArray.forEach((character) => {
     if (character.equipedSeal) {
-      sealIndex = seals.findIndex((seal) => seal[0] === character.equipedSeal);
+      const sealIndex = seals.findIndex(
+        (seal) => seal[0] === character.equipedSeal
+      );
       character.equipedSeal =
         sealIndex !== -1
           ? (character.equipedSeal = seals[sealIndex][1])
