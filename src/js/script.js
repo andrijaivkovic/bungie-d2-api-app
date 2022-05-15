@@ -481,13 +481,11 @@ const init = async function (account) {
 
   window.location.hash = state.account.membershipId;
 
-  await formatCharacterInfo(state.account.characters),
-    // getWeaponsInfo(state.account.characters),
-
-    await Promise.all([
-      getWeaponsDetails(state.account.characters),
-      getSeasonalInfo(state.account.characters[0]),
-    ]);
+  await Promise.all([
+    formatCharacterInfo(state.account.characters),
+    getWeaponsDetails(state.account.characters),
+    getSeasonalInfo(state.account.characters[0]),
+  ]);
 
   calculateTimePlayed(state.account.characters);
 
