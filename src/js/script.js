@@ -1,6 +1,7 @@
 // Imports
 import { AJAX } from "./helper";
 import { API_URL } from "./config";
+import { seals } from "./config";
 
 // Helpers
 const getEntityInfo = async function (entityType, hashIdentifier, type) {
@@ -92,6 +93,7 @@ export const state = {
 // == ACCOUNT ==
 
 const findAccount = async function (accName) {
+  console.time("Find Account");
   const [displayName, displayNameCode] = accName.split("#");
   const uploadData = { displayName, displayNameCode };
 
@@ -106,9 +108,16 @@ const findAccount = async function (accName) {
   } catch (error) {
     console.error(error);
   }
+  console.timeEnd("Find Account");
+};
+
+const findAccountById = async function (membershipId) {
+  state.account.membershipId = membershipId;
+  state.account.membershipType = "3";
 };
 
 const getAccountInfo = async function (membershipType, membershipId) {
+  console.time("Get Account Info");
   const data = await AJAX(
     `${API_URL}/${membershipType}/Profile/${membershipId}/?components=100`
   );
@@ -124,9 +133,11 @@ const getAccountInfo = async function (membershipType, membershipId) {
     data.Response.profile.data.userInfo.bungieGlobalDisplayNameCode;
   state.account.currentSeason.seasonHash =
     data.Response.profile.data.currentSeasonHash;
+  console.timeEnd("Get Account Info");
 };
 
 const getSeasonalInfo = async function (character) {
+  console.time("Get Seasonal Info");
   const [seasonName, seasonIcon, seasonNumber, seasonPassHash] =
     await getEntityInfo(
       "DestinySeasonDefinition",
@@ -171,6 +182,8 @@ const getSeasonalInfo = async function (character) {
     : seasonProgress.level;
 
   state.account.seasonPassRank = seasonPassRank;
+
+  console.timeEnd("Get Seasonal Info");
 };
 
 const calculateTimePlayed = function (characterArray) {
@@ -204,9 +217,22 @@ const calculateLastPlayed = function (lastOnline) {
   return "> 7 days ago";
 };
 
+const formatSealNames = function (characterArray) {
+  characterArray.forEach((character) => {
+    if (character.equipedSeal) {
+      sealIndex = seals.findIndex((seal) => seal[0] === character.equipedSeal);
+      character.equipedSeal =
+        sealIndex !== -1
+          ? (character.equipedSeal = seals[sealIndex][1])
+          : character.equipedSeal;
+    }
+  });
+};
+
 // == CHARACTERS ==
 
 const getCharactersInfo = async function (membershipType, membershipId) {
+  console.time("Get Character Info");
   try {
     const data = await AJAX(
       `${API_URL}/${membershipType}/Profile/${membershipId}/?components=200`
@@ -227,6 +253,7 @@ const getCharactersInfo = async function (membershipType, membershipId) {
             ? character.titleRecordHash
             : "No Title Equipped",
         };
+        console.log(JSON.stringify(characterNew));
         return characterNew;
       }
     );
@@ -263,21 +290,34 @@ const formatCharacterInfo = async function (characterArray) {
           "emblem"
         );
 
-        if (
-          character.equipedSeal &&
-          character.equipedSeal !== "No Title Equipped"
-        ) {
-          character.equipedSeal = await getEntityInfo(
-            "DestinyRecordDefinition",
-            character.equipedSeal,
-            "seal"
-          );
-        }
+        // Closure
+        const formatEmblem = async function () {
+          if (character.equipedSeal !== "No Title Equipped") {
+            if (character.equipedSeal === 2909250963) {
+              character.equipedSeal = "Garden of Salvation";
+              return;
+            }
+
+            if (character.equipedSeal === 317521250) {
+              character.equipedSeal = "Black Armory";
+              return;
+            }
+
+            character.equipedSeal = await getEntityInfo(
+              "DestinyRecordDefinition",
+              character.equipedSeal,
+              "seal"
+            );
+          }
+        };
+
+        await formatEmblem();
       } catch (error) {
         console.error(error);
       }
     })
   );
+  console.timeEnd("Get Character Info");
 };
 
 // == GEAR ==
@@ -296,6 +336,7 @@ const getWeapons = async function (membershipType, membershipId, characterId) {
 };
 
 const getWeaponsInfo = async function (charactersArray) {
+  console.time("Get Weapons Info");
   await Promise.all(
     charactersArray.map(async (character) => {
       try {
@@ -317,9 +358,11 @@ const getWeaponsInfo = async function (charactersArray) {
       }
     })
   );
+  console.timeEnd("Get Weapons Info");
 };
 
 const getWeaponsDetails = async function (characterArray) {
+  console.time("Get Weapons Details");
   await Promise.all(
     characterArray.map(
       async (character) =>
@@ -350,6 +393,7 @@ const getWeaponsDetails = async function (characterArray) {
         )
     )
   );
+  console.timeEnd("Get Weapons Details");
 };
 
 // == MARKUP ==
@@ -473,10 +517,18 @@ const accountParentElement = document.querySelector(".account-info");
 const searchButton = document.querySelector(".search__btn");
 const refreshButton = document.querySelector(".refresh__btn");
 
-const init = async function (accName) {
+const init = async function (account) {
   loadingSpinnerToggle();
 
-  await findAccount(accName);
+  console.time("Got everything!");
+
+  if (parseInt(account)) {
+    findAccountById(account);
+  } else {
+    await findAccount(account);
+  }
+
+  window.location.hash = state.account.membershipId;
 
   await Promise.all([
     getAccountInfo(state.account.membershipType, state.account.membershipId),
@@ -494,6 +546,10 @@ const init = async function (accName) {
   ]);
 
   calculateTimePlayed(state.account.characters);
+
+  formatSealNames(state.account.characters);
+
+  console.timeEnd("Got everything!");
 
   console.log(state);
 
@@ -513,6 +569,8 @@ searchButton.addEventListener("click", async function (e) {
   e.preventDefault();
 
   const searchField = document.querySelector(".search__field");
+
+  if (!searchField.value) return;
 
   const searchQuery = searchField.value;
 
@@ -534,4 +592,13 @@ refreshButton.addEventListener("click", async function () {
   console.log(`Refreshing with ${state.searchQuery}`);
   await init(state.searchQuery);
   console.log("Refreshed!");
+});
+
+window.addEventListener("load", async function () {
+  const hash = window.location.hash.slice(1);
+
+  if (hash) {
+    await init(hash);
+    state.searchQuery = `${state.account.displayName}#${state.account.displayNameCode}`;
+  }
 });
