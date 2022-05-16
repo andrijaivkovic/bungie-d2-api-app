@@ -1,0 +1,210 @@
+.cards {
+  display: flex;
+  gap: 120px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  gap: 1.5rem;
+
+  min-width: 320px;
+  padding: 1.5rem;
+
+  color: #fff;
+  background-color: #282828;
+
+  border-radius: 30px;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease-in-out;
+}
+
+/* .card:hover {
+  transform: translateY(-3px);
+  -moz-box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+} */
+
+/* CARD HEADER */
+
+.card__header {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.card__header img {
+  width: 65px;
+  height: 65px;
+}
+
+.card__header--text {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  font-weight: 300;
+  font-size: 16px;
+  gap: 0.2rem;
+}
+
+.header__text--top {
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header__text--bottom {
+  font-size: 14px;
+  display: flex;
+  gap: 1rem;
+}
+
+/* CARD TITLE */
+
+.card__title {
+  justify-content: center;
+  display: flex;
+  color: #b862c8;
+  font-style: italic;
+  border-top: 1px solid #b862c8;
+  border-bottom: 1px solid #b862c8;
+}
+
+.card__title--text {
+  margin-top: 13px;
+  margin-bottom: 13px;
+}
+
+/* CARD WEAPONS */
+
+.card__weapons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-weight: 300;
+  margin-top: 0.75rem;
+}
+
+.card__weapons img {
+  border-radius: 5px;
+  width: 45px;
+  height: 45px;
+}
+
+.card__weapons--weapon {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.weapons__weapon--text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.weapon__text--name {
+  min-width: 185px;
+}
+
+.weapon__text--top {
+  display: flex;
+  font-size: 14px;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.weapon__text--bottom {
+  color: #cccbcb;
+  font-weight: 200;
+  font-size: 12px;
+}
+
+@media screen and (min-width: 320px) and (max-width: 480px) {
+  .cards {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .card {
+    min-width: 275px;
+    gap: 20px;
+    align-self: center;
+  }
+
+  .card__header {
+    display: flex;
+    gap: 20px;
+  }
+
+  .card__header img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .card__header--text {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    font-weight: 300;
+    gap: 0.2rem;
+  }
+
+  .header__text--top {
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .header__text--bottom {
+    font-size: 10px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .card__title--text {
+    font-size: 12px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+
+  .card__weapons {
+    gap: 1rem;
+  }
+
+  .card__weapons img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .card__weapons--weapon {
+    display: flex;
+    gap: 12px;
+  }
+
+  .weapons__weapon--text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+  }
+
+  .weapon__text--name {
+    min-width: 170px;
+  }
+
+  .weapon__text--top {
+    display: flex;
+    font-size: 12px;
+    gap: 0.2rem;
+    justify-content: space-between;
+  }
+
+  .weapon__text--bottom {
+    font-size: 8px;
+  }
+}

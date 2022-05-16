@@ -1,0 +1,81 @@
+.account-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-width: 250px;
+}
+
+.account-info__name {
+  display: flex;
+  font-size: 48px;
+  font-weight: 200;
+  justify-content: center;
+}
+
+.account-info__name span {
+  color: #a4a4a4;
+}
+
+.account-info__stats {
+  display: flex;
+  flex-direction: row;
+  gap: 56px;
+}
+
+.account-info__stats--part {
+  display: flex;
+  gap: 56px;
+}
+
+.account-info__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat__lower-text {
+  font-size: 16px;
+  font-weight: 200;
+  color: #a4a4a4;
+}
+
+.stat__upper-text {
+  font-size: 24px;
+  font-weight: 200;
+}
+
+@media screen and (min-width: 320px) and (max-width: 480px) {
+  .account-info {
+    gap: 32px;
+  }
+
+  .account-info__name {
+    font-size: 32px;
+  }
+
+  .account-info__stats {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 32px;
+    padding-inline: 10px;
+  }
+
+  .account-info__stats--part {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: unset;
+  }
+
+  .stat__upper-text {
+    font-size: 16px;
+    font-weight: 200;
+  }
+
+  .stat__lower-text {
+    font-size: 12px;
+    font-weight: 200;
+    color: #a4a4a4;
+  }
+}

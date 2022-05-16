@@ -394,10 +394,10 @@ const generateCharacterMarkup = function () {
             </div>
           </div>
         </div>
-        <div class="card__title">
+        <div class="card__title hide">
           <div class="card__title--text">${character.equipedSeal}</div>
         </div>
-        <div class="card__weapons">
+        <div class="card__weapons hide">
         ${generateCharacterWeaponsMarkup(character.weapons)}
         </div>
         </div>
@@ -416,28 +416,30 @@ const generateAccountInfoMarkup = function () {
   }</span></p>
     </div>
     <div class="account-info__stats">
-      <div class="account-info__stat account-info__stats--active-triumph-score">
+      <div class="account-info__stats--first account-info__stats--part">
+        <div class="account-info__stat account-info__stats--active-triumph-score">
         <div class="stat__upper-text">
         ${state.account.activeScore.toLocaleString("en-US")}</div>
         <div class="stat__lower-text">Active Triumph</div>
-      </div>
-      <div class="account-info__stat account-info__stats--time-played">
+        </div>
+        <div class="account-info__stat account-info__stats--time-played">
         <div class="stat__upper-text">${Math.floor(
           state.account.minutesPlayedTotal / 60
         )}h ${state.account.minutesPlayedTotal % 60}m</div>
         <div class="stat__lower-text">Time Played</div>
+        </div>
       </div>
-        <div class="account-info__stat account-info__stats--season-pass">
-        <div class="stat__upper-text pass">✦ ${
-          state.account.seasonPassRank
-        }</div>
-        <div class="stat__lower-text">Season Pass</div>
-      </div>
-      <div class="account-info__stat account-info__stats--last-seen">
-        <div class="stat__upper-text">${calculateLastPlayed(
-          state.account.dateLastPlayed
-        )}</div>
-        <div div class="stat__lower-text">Last Seen</div>
+      <div class="account-info__stats--second account-info__stats--part">
+      <div class="account-info__stat account-info__stats--season-pass">
+      <div class="stat__upper-text pass">✦ ${state.account.seasonPassRank}</div>
+      <div class="stat__lower-text">Season Pass</div>
+    </div>
+    <div class="account-info__stat account-info__stats--last-seen">
+      <div class="stat__upper-text">${calculateLastPlayed(
+        state.account.dateLastPlayed
+      )}</div>
+      <div div class="stat__lower-text">Last Seen</div>
+    </div>
       </div>
     </div>
   `;
@@ -544,3 +546,31 @@ window.addEventListener("load", async function () {
     state.searchQuery = `${state.account.displayName}#${state.account.displayNameCode}`;
   }
 });
+
+charactersParentElement.addEventListener("click", function (e) {
+  const card = e.target.closest(".card");
+
+  if (!card) return;
+
+  const cardTitle = card.querySelector(".card__title");
+  const cardWeapons = card.querySelector(".card__weapons");
+
+  cardTitle.classList.toggle("hide");
+  cardWeapons.classList.toggle("hide");
+});
+
+// addHandlerUpdateServings(handler) {
+//   this._parentElement.addEventListener('click', function (e) {
+//     // We can select the button that was clicked by looking for the closest parent element that has the inputed class - the button that we are looking for (eg. if we click on the text or a graphic inside of the button and not directly on the button, button will be selected instead)
+//     const button = e.target.closest('.btn--update-servings');
+
+//     // Guard clause for if we clicked on the part of the parent element that wasn't a button
+//     if (!button) return;
+
+//     // Reading the data attribute off of the clicked button
+//     const updateTo = +button.dataset.updateTo;
+
+//     // Calling the handler function if the 'updateTo' is larger than zero
+//     if (updateTo > 0) handler(updateTo);
+//   });
+// }
