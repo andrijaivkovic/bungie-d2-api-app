@@ -15,7 +15,7 @@
   color: #fff;
   background-color: #282828;
 
-  border-radius: 30px;
+  border-radius: 40px;
   letter-spacing: 1px;
 
   cursor: pointer;
@@ -131,6 +131,7 @@
   }
 
   .card {
+    border-radius: 30px;
     min-width: 275px;
     gap: 20px;
     align-self: center;
