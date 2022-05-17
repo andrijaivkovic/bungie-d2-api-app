@@ -349,7 +349,7 @@ const generateCharacterWeaponsMarkup = function (weaponsArray) {
   const markup = weaponsArray
     .map((weapon) => {
       return `
-      <div data-item-instance-id="${weapon.itemInstanceId}" class="card__weapons--weapon">
+      <div data-item-instance-id="${weapon.itemInstanceId}" class="card__weapons--weapon item">
         <div class="weapons__weapon--image">
           <img src="https://www.bungie.net${weapon.icon}" alt="" />
         </div>
@@ -465,6 +465,8 @@ const accountParentElement = document.querySelector(".account-info");
 const searchButton = document.querySelector(".search__btn");
 const refreshButton = document.querySelector(".refresh__btn");
 
+const characterWeapons = document.querySelector(".card__weapons");
+
 const init = async function (account) {
   loadingSpinnerToggle();
 
@@ -549,8 +551,15 @@ window.addEventListener("load", async function () {
 
 charactersParentElement.addEventListener("click", function (e) {
   const card = e.target.closest(".card");
+  const item = e.target.closest(".item");
 
   if (!card) return;
+
+  if (item) {
+    const itemInstanceId = item.dataset.itemInstanceId;
+    console.log(itemInstanceId);
+    return;
+  }
 
   const cardTitle = card.querySelector(".card__title");
   const cardWeapons = card.querySelector(".card__weapons");
@@ -558,19 +567,3 @@ charactersParentElement.addEventListener("click", function (e) {
   cardTitle.classList.toggle("hide");
   cardWeapons.classList.toggle("hide");
 });
-
-// addHandlerUpdateServings(handler) {
-//   this._parentElement.addEventListener('click', function (e) {
-//     // We can select the button that was clicked by looking for the closest parent element that has the inputed class - the button that we are looking for (eg. if we click on the text or a graphic inside of the button and not directly on the button, button will be selected instead)
-//     const button = e.target.closest('.btn--update-servings');
-
-//     // Guard clause for if we clicked on the part of the parent element that wasn't a button
-//     if (!button) return;
-
-//     // Reading the data attribute off of the clicked button
-//     const updateTo = +button.dataset.updateTo;
-
-//     // Calling the handler function if the 'updateTo' is larger than zero
-//     if (updateTo > 0) handler(updateTo);
-//   });
-// }

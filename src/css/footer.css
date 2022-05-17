@@ -1,0 +1,15 @@
+.footer {
+  display: flex;
+}
+
+.footer__icon {
+  width: 30px;
+  height: 30px;
+  fill: #727272;
+}
+
+.footer__text {
+}
+
+@media screen and (min-width: 320px) and (max-width: 480px) {
+}
