@@ -9,7 +9,7 @@ App is developed using vanilla Javascript, HTML and CSS.<br><br>
 **MVC** _(Model-View-Controller)_ pattern is used for developing this application<br>
 because I see it as the best fit for this kind of application.
 
-This project makes use of it's sister project https://github.com/andrijaivkovic/bungie-d2-manifest-server <br>
+This project makes use of it's sister project: https://github.com/andrijaivkovic/bungie-d2-manifest-server <br>
 that is an API used to get data about various in-game items from Bungie's Manifest file (an SQL database)<br>
 This is also possible using Bungie's API but is much slower that the local solution mentioned above.<br>
 
