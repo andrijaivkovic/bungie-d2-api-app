@@ -11,7 +11,7 @@ because I see it as the best fit for this kind of application.
 
 This project makes use of it's sister project https://github.com/andrijaivkovic/bungie-d2-manifest-server <br>
 that is an API used to get data about various in-game items from Bungie's Manifest file (an SQL database)<br>
-This is also possible using Bungie's API but is much slower that the local solution mentioned above.<br><br>
+This is also possible using Bungie's API but is much slower that the local solution mentioned above.<br>
 
 To make this app fully indepentent change the "LOCAL_URL" variable in "src/js/config.js" file to the commented value.
 
