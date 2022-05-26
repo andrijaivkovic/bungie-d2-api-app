@@ -1,6 +1,5 @@
 // Imports
-import { API_KEY } from "./config";
-import { API_URL } from "./config";
+import { API_KEY, API_URL, LOCAL_URL } from "./config";
 
 // Function for making AJAX calls
 export const AJAX = async function (url, uploadData = undefined) {
@@ -28,50 +27,20 @@ export const AJAX = async function (url, uploadData = undefined) {
     if (!response.ok)
       throw new Error(`🚫 ${data.message} (${response.status})`);
 
-    return data;
+    return data.Response;
   } catch (error) {
-    // Re-throwing the error so it can be caught in the function calling this function
-    throw error;
+    console.log(error);
   }
 };
 
 // Get information for inputed entity
-export const getEntityInfo = async function (entityType, hashIdentifier, type) {
+export const getEntityInfo = async function (entityType, hashIdentifier) {
   try {
     const data = await AJAX(
-      `${API_URL}/Manifest/${entityType}/${hashIdentifier}/`
+      `${LOCAL_URL}/Platform/Destiny2/Manifest/${entityType}/${hashIdentifier}`
     );
 
-    if (
-      type === "class" ||
-      type === "gender" ||
-      type === "race" ||
-      type === "seal"
-    )
-      return data.Response.displayProperties.name;
-
-    if (type === "weapon")
-      return [
-        data.Response.displayProperties.name,
-        data.Response.displayProperties.icon,
-        data.Response.itemTypeAndTierDisplayName,
-      ];
-
-    if (type === "emblem") return data.Response.secondaryOverlay;
-
-    if (type === "seasonDefinition")
-      return [
-        data.Response.displayProperties.name,
-        data.Response.displayProperties.icon,
-        data.Response.seasonNumber,
-        data.Response.seasonPassHash,
-      ];
-
-    if (type === "seasonPassDefinition")
-      return [
-        data.Response.rewardProgressionHash,
-        data.Response.prestigeProgressionHash,
-      ];
+    return data;
   } catch (error) {
     console.error(error);
   }
@@ -81,13 +50,27 @@ export const getEntityInfo = async function (entityType, hashIdentifier, type) {
 export const getItemInstanceInfo = async function (
   membershipType,
   membershipId,
-  itemInstanceId
+  itemInstanceId,
+  size = "minified"
 ) {
   try {
-    const data = await AJAX(
-      `${API_URL}/${membershipType}/Profile/${membershipId}/Item/${itemInstanceId}/?components=300`
-    );
-    return data.Response.instance.data.primaryStat.value;
+    if (size === "minified") {
+      const data = await AJAX(
+        `${API_URL}/${membershipType}/Profile/${membershipId}/Item/${itemInstanceId}/?components=300`
+      );
+
+      const lightLevel = data.instance.data?.primaryStat?.value;
+
+      return lightLevel;
+    }
+
+    if (size === "full") {
+      const data = await AJAX(
+        `${API_URL}/${membershipType}/Profile/${membershipId}/Item/${itemInstanceId}/?components=300,302,304,305,307`
+      );
+
+      return data;
+    }
   } catch (error) {
     console.error(error);
   }

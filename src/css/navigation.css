@@ -68,8 +68,8 @@
   }
 
   .nav__icon {
-    width: 42px;
-    height: 39px;
+    width: 35px;
+    height: 32px;
     fill: #727272;
   }
 
@@ -109,7 +109,7 @@
   .search__btn--icon {
     display: block;
     stroke: #fff;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
   }
 }

@@ -1,0 +1,288 @@
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  font-weight: 200;
+  letter-spacing: 1px;
+}
+
+.overlay__background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  z-index: 110;
+}
+
+.overlay__item-view {
+  display: flex;
+  flex-direction: row;
+  z-index: 120;
+  background-color: #282828;
+  border-radius: 30px;
+  overflow: hidden;
+
+  align-items: stretch;
+  justify-content: center;
+
+  min-width: 500px;
+  min-height: 300px;
+}
+
+.overlay__item-view-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 2.5rem;
+  gap: 1.5rem;
+  width: 375px;
+}
+
+.overlay__item-view-screenshot {
+  /* background-image: url("../img/corrupted/corrupted-screenshot.jpg"); */
+  min-width: 730px;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  background-size: cover;
+}
+
+.item-view-details__header {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.item__icon {
+  height: 80px;
+  width: 80px;
+  position: relative;
+}
+
+.item__icon--icon {
+  width: 100%;
+  height: 100%;
+}
+
+.item__icon--border {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.item__icon--masterwork {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.item-details__details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item-details__details--element-lvl {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.details__element {
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+}
+
+.details__element img {
+  width: 20px;
+  height: 20px;
+}
+
+.details__name {
+  font-weight: 200;
+  font-size: 16px;
+}
+
+.details__type {
+  font-weight: 100 !important;
+  font-size: 14px;
+}
+
+.details__energy {
+  font: 100 !important;
+  font-size: 14px;
+}
+
+.details__level {
+  font: 100 !important;
+  font-size: 14px;
+}
+
+/* ITEM SOURCE */
+
+.item-view-details__source {
+  display: flex;
+}
+
+.item-view-details__source--source {
+  font-size: 12px;
+}
+
+/* ITEM STATS */
+
+.item-view-details__stats {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 0;
+  border-top: 1px solid #727272;
+  border-bottom: 1px solid #727272;
+}
+
+.details__stats--stats-container {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 100;
+}
+
+.stat__name {
+  text-align: right;
+  min-width: 90px;
+}
+
+.stat__visual {
+  width: 175px;
+  background-color: #727272;
+  height: 15px;
+}
+
+.stat__visual--amount {
+  width: 150px;
+  height: 100%;
+  display: block;
+  float: left;
+  background-color: #d9d9d9;
+}
+
+.stat__amount {
+  text-align: right;
+  min-width: 20px;
+}
+
+/* ARMOR PERK */
+
+.item-view-details__perk {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #4a4a4a;
+}
+
+.item-view-details__perk--icon {
+  display: flex;
+}
+
+.perk__icon {
+  width: 50px;
+  height: 50px;
+  align-self: center;
+}
+
+.item-view-details__perk--description {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.perk__description--title {
+  font-size: 14px;
+  font-weight: 200;
+}
+
+.perk__description--body {
+  font-size: 12px;
+  font-weight: 100;
+}
+
+/* ITEM MODS & COSMETICS */
+
+.item-view-details__mods-cosmetics {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #4a4a4a;
+}
+
+.item-view-details__mods {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+
+.item-view-details__cosmetics {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+
+.details__title {
+  font-size: 14px;
+}
+
+.slot__container {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.slot {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #707070;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slot__icon {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+
+  transform: scale(0.925);
+  transform-origin: center;
+  border: 1px solid #4a4a4a;
+}
+
+.slot__border {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  transform: scale(0.95);
+  transform-origin: center;
+  border: 1px solid #4a4a4a;
+}
+
+/* WIP */
+
+.wip {
+  align-self: center;
+}

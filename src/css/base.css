@@ -7,8 +7,14 @@
 
 html {
   font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
   background-color: #1b1b1b;
+  color: #fff;
+
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 body {
