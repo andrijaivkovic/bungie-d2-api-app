@@ -130,6 +130,11 @@ export const formatEquipmentInfo = async function (charactersArray) {
             "DestinyInventoryItemDefinition",
             weapon.itemHash
           );
+
+          weaponInfo.iconWatermark = weaponInfo?.iconWatermark
+            ? weaponInfo.iconWatermark
+            : weaponInfo.quality.displayVersionWatermarkIcons[0];
+
           Object.assign(weapon, weaponInfo);
         })
       );
@@ -139,6 +144,11 @@ export const formatEquipmentInfo = async function (charactersArray) {
             "DestinyInventoryItemDefinition",
             armor.itemHash
           );
+
+          armorInfo.iconWatermark = armorInfo?.iconWatermark
+            ? armorInfo.iconWatermark
+            : armorInfo.quality.displayVersionWatermarkIcons[0];
+
           Object.assign(armor, armorInfo);
         })
       );
@@ -148,6 +158,11 @@ export const formatEquipmentInfo = async function (charactersArray) {
             "DestinyInventoryItemDefinition",
             misc.itemHash
           );
+
+          miscInfo.iconWatermark = miscInfo?.iconWatermark
+            ? miscInfo.iconWatermark
+            : miscInfo.quality.displayVersionWatermarkIcons[0];
+
           Object.assign(misc, miscInfo);
         })
       );
@@ -176,6 +191,9 @@ export const getEquipmentInstanceInfo = async function (characterArray) {
           );
         })
       );
+      character.misc.forEach((misc) => {
+        misc.lightLevel = 0;
+      });
     })
   );
 };
@@ -186,182 +204,225 @@ export const getItemInfo = async function (
   itemInstanceId,
   itemType
 ) {
-  const { membershipId, membershipType } =
-    state.account.characters[characterIndex];
+  try {
+    const { membershipId, membershipType } =
+      state.account.characters[characterIndex];
 
-  const itemInfoData = await getEntityInfo(
-    "DestinyInventoryItemDefinition",
-    itemHash
-  );
+    const itemInfoData = await getEntityInfo(
+      "DestinyInventoryItemDefinition",
+      itemHash
+    );
 
-  const itemInstanceInfoData = await getItemInstanceInfo(
-    membershipType,
-    membershipId,
-    itemInstanceId,
-    "full"
-  );
+    const itemInstanceInfoData = await getItemInstanceInfo(
+      membershipType,
+      membershipId,
+      itemInstanceId,
+      "full"
+    );
 
-  const collectibleHash = itemInfoData.collectibleHash;
+    const collectibleHash = itemInfoData.collectibleHash;
 
-  const itemInfo = {
-    name: itemInfoData.displayProperties.name,
-    icon: itemInfoData.displayProperties.icon,
-    iconWatermark: itemInfoData.iconWatermark,
-    screenshot: itemInfoData.screenshot,
-    itemTypeAndTierDisplayName: itemInfoData.itemTypeAndTierDisplayName,
-  };
+    const itemInfo = {
+      name: itemInfoData.displayProperties.name,
+      icon: itemInfoData.displayProperties.icon,
+      flavorText: itemInfoData.flavorText,
+      screenshot: itemInfoData.screenshot,
+      itemTypeAndTierDisplayName: itemInfoData.itemTypeAndTierDisplayName,
+      ammoType: itemInfoData?.equippingBlock?.ammoType,
+    };
 
-  const itemRarity = itemInfoData.inventory.tierTypeName;
-  const itemRarityType = `${itemRarity.toLowerCase()}_${itemType}`;
+    itemInfo.iconWatermark = itemInfoData?.iconWatermark
+      ? itemInfoData.iconWatermark
+      : itemInfoData.quality.displayVersionWatermarkIcons[0];
 
-  const itemStatsArray = Object.values(itemInstanceInfoData.stats.data.stats);
+    // itemInfo.iconWatermark = itemInfo.iconWatermark
+    //   ? itemInfo.iconWatermark
+    //   : "/common/destiny2_content/icons/0dac2f181f0245cfc64494eccb7db9f7.png";
 
-  // const itemStatsArray =
-  //   itemInstanceInfoData.stats.data?.stats &&
-  //   itemInstanceInfoData.stats.data.stats.length > 0
-  //     ? Object.values(itemInstanceInfoData.stats.data.stats)
-  //     : [];
+    const itemRarity = itemInfoData.inventory.tierTypeName;
+    const itemRarityType = `${itemRarity.toLowerCase()}_${itemType}`;
 
-  //.filter(perk) => perk.isActive === true && perk.visible === true);
+    const itemStatsArray = itemInstanceInfoData.stats.data?.stats
+      ? Object.values(itemInstanceInfoData.stats.data.stats)
+      : [];
+    const itemStatsTotal = itemStatsArray.reduce(
+      (acc, stat) => acc + stat.value,
+      0
+    );
 
-  // const itemSocketsArray = itemInstanceInfoData.sockets.data.sockets.filter(
-  //   (socket) => socket.isEnabled === true && socket.isVisible === true
-  // );
+    // const itemStatsArray =
+    //   itemInstanceInfoData.stats.data?.stats &&
+    //   itemInstanceInfoData.stats.data.stats.length > 0
+    //     ? Object.values(itemInstanceInfoData.stats.data.stats)
+    //     : [];
 
-  const itemInstanceInfo = {
-    state: itemInstanceInfoData.item.data.state,
-    level: itemInstanceInfoData.instance.data.primaryStat?.value,
-    stats: itemStatsArray,
-    sockets: itemInstanceInfoData.sockets.data.sockets,
-    damageType: {
-      damageTypeHash: itemInstanceInfoData.instance.data?.damageTypeHash,
-    },
-    energyType: {
-      energyTypeHash:
-        itemInstanceInfoData.instance.data?.energy?.energyTypeHash,
-      energyCapacity:
-        itemInstanceInfoData.instance.data?.energy?.energyCapacity,
-    },
-  };
+    //.filter(perk) => perk.isActive === true && perk.visible === true);
 
-  state.itemView = {
-    collectibleHash,
-    itemRarityType,
-    itemHash,
-    itemInstanceId,
-    itemInfo,
-    itemInstanceInfo,
-  };
+    // const itemSocketsArray = itemInstanceInfoData.sockets.data.sockets.filter(
+    //   (socket) => socket.isEnabled === true && socket.isVisible === true
+    // );
+
+    const itemSocketsArray = itemInstanceInfoData.sockets?.data?.sockets;
+
+    const itemInstanceInfo = {
+      state: itemInstanceInfoData.item.data.state,
+      stats: itemStatsArray,
+      statsTotal: itemStatsTotal,
+      sockets: itemSocketsArray,
+      damageType: {
+        damageTypeHash: itemInstanceInfoData.instance.data?.damageTypeHash,
+      },
+      energyType: {
+        energyTypeHash:
+          itemInstanceInfoData.instance.data?.energy?.energyTypeHash,
+        energyCapacity:
+          itemInstanceInfoData.instance.data?.energy?.energyCapacity,
+      },
+    };
+
+    itemInstanceInfo.level = itemInstanceInfoData?.instance?.data?.primaryStat
+      ?.value
+      ? itemInstanceInfoData.instance.data.primaryStat.value
+      : 0;
+
+    state.itemView = {
+      collectibleHash,
+      itemRarityType,
+      itemHash,
+      itemInstanceId,
+      itemInfo,
+      itemInstanceInfo,
+    };
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const formatItemInfo = async function (itemInfoObject) {
-  const damageTypeHash =
-    itemInfoObject.itemInstanceInfo.damageType.damageTypeHash;
+  try {
+    const damageTypeHash =
+      itemInfoObject.itemInstanceInfo.damageType.damageTypeHash;
 
-  if (damageTypeHash) {
-    const damageTypeInfoData = await getEntityInfo(
-      "DestinyDamageTypeDefinition",
-      damageTypeHash
-    );
-
-    const damageTypeInfo = {
-      name: damageTypeInfoData.displayProperties.name,
-      icon: damageTypeInfoData.displayProperties.icon,
-      description: damageTypeInfoData.displayProperties.description,
-    };
-
-    Object.assign(itemInfoObject.itemInstanceInfo.damageType, damageTypeInfo);
-  }
-
-  const energyTypeHash =
-    itemInfoObject.itemInstanceInfo.energyType.energyTypeHash;
-
-  if (energyTypeHash) {
-    const energyTypeInfoData = await getEntityInfo(
-      "DestinyEnergyTypeDefinition",
-      energyTypeHash
-    );
-
-    const energyTypeInfo = {
-      name: energyTypeInfoData.displayProperties.name,
-      icon: energyTypeInfoData.displayProperties.icon,
-      description: energyTypeInfoData.displayProperties.description,
-    };
-
-    Object.assign(itemInfoObject.itemInstanceInfo.energyType, energyTypeInfo);
-  }
-
-  if (itemInfoObject.itemInstanceInfo.sockets.length > 0) {
-    await Promise.all(
-      itemInfoObject.itemInstanceInfo.sockets.map(async (socket) => {
-        const plugHash = socket?.plugHash;
-        if (plugHash) {
-          const socketInfoData = await getEntityInfo(
-            "DestinyInventoryItemDefinition",
-            plugHash
-          );
-
-          const socketInfo = {
-            name: socketInfoData?.displayProperties?.name,
-            icon: socketInfoData?.displayProperties?.icon,
-            iconWatermark: socketInfoData?.iconWatermark,
-            description: socketInfoData?.displayProperties?.description,
-            energyTypeIcon:
-              "/common/destiny2_content/icons/435daeef2fc277af6476f2ffb9b18bcb.png",
-            energyTypeName: "This item is not a mod.",
-          };
-
-          socketInfo.iconWatermark =
-            socketInfoData?.iconWatermark ||
-            "/common/destiny2_content/icons/435daeef2fc277af6476f2ffb9b18bcb.png";
-
-          const statTypeHash = socketInfoData?.investmentStats[0]?.statTypeHash;
-
-          if (statTypeHash) {
-            const socketEnergyInfoData = await getEntityInfo(
-              "DestinyStatDefinition",
-              statTypeHash
-            );
-            socketInfo.energyTypeIcon =
-              socketEnergyInfoData?.displayProperties?.icon;
-            socketInfo.energyTypeName =
-              socketEnergyInfoData?.displayProperties?.name;
-          }
-
-          Object.assign(socket, socketInfo);
-        }
-      })
-    );
-  }
-
-  await Promise.all(
-    itemInfoObject.itemInstanceInfo.stats.map(async (stat) => {
-      const statHash = stat.statHash;
-      const statInfoData = await getEntityInfo(
-        "DestinyStatDefinition",
-        statHash
+    if (damageTypeHash) {
+      const damageTypeInfoData = await getEntityInfo(
+        "DestinyDamageTypeDefinition",
+        damageTypeHash
       );
 
-      const statInfo = {
-        name: statInfoData.displayProperties.name,
-        description: statInfoData.displayProperties.description,
+      const damageTypeInfo = {
+        name: damageTypeInfoData.displayProperties.name,
+        icon: damageTypeInfoData.displayProperties.icon,
+        description: damageTypeInfoData.displayProperties.description,
       };
 
-      Object.assign(stat, statInfo);
-    })
-  );
+      Object.assign(itemInfoObject.itemInstanceInfo.damageType, damageTypeInfo);
+    }
 
-  const collectibleHash = itemInfoObject?.collectibleHash;
+    const energyTypeHash =
+      itemInfoObject.itemInstanceInfo.energyType.energyTypeHash;
 
-  itemInfoObject.itemInfo.source = "Source: Source not found.";
+    if (energyTypeHash) {
+      const energyTypeInfoData = await getEntityInfo(
+        "DestinyEnergyTypeDefinition",
+        energyTypeHash
+      );
 
-  if (collectibleHash) {
-    const collectibleInfoData = await getEntityInfo(
-      "DestinyCollectibleDefinition",
-      collectibleHash
+      const energyTypeInfo = {
+        name: energyTypeInfoData.displayProperties.name,
+        icon: energyTypeInfoData.displayProperties.icon,
+        description: energyTypeInfoData.displayProperties.description,
+      };
+
+      Object.assign(itemInfoObject.itemInstanceInfo.energyType, energyTypeInfo);
+    }
+
+    if (itemInfoObject.itemInstanceInfo.sockets) {
+      await Promise.all(
+        itemInfoObject.itemInstanceInfo.sockets.map(async (socket) => {
+          const plugHash = socket?.plugHash;
+          if (plugHash) {
+            const socketInfoData = await getEntityInfo(
+              "DestinyInventoryItemDefinition",
+              plugHash
+            );
+
+            const socketInfo = {
+              name: socketInfoData?.displayProperties?.name,
+              icon: socketInfoData?.displayProperties?.icon,
+              iconWatermark: socketInfoData?.iconWatermark,
+              description: socketInfoData?.displayProperties?.description,
+              itemTypeDisplayName: socketInfoData?.itemTypeDisplayName,
+              energyTypeIcon:
+                "/common/destiny2_content/icons/435daeef2fc277af6476f2ffb9b18bcb.png",
+              energyTypeName: "This item is not a mod.",
+            };
+
+            socketInfo.iconWatermark =
+              socketInfoData?.iconWatermark ||
+              "/common/destiny2_content/icons/435daeef2fc277af6476f2ffb9b18bcb.png";
+
+            const statTypeHash =
+              socketInfoData?.investmentStats[0]?.statTypeHash;
+
+            if (statTypeHash) {
+              const socketEnergyInfoData = await getEntityInfo(
+                "DestinyStatDefinition",
+                statTypeHash
+              );
+              socketInfo.energyTypeIcon =
+                socketEnergyInfoData?.displayProperties?.icon;
+              socketInfo.energyTypeName =
+                socketEnergyInfoData?.displayProperties?.name;
+            }
+
+            Object.assign(socket, socketInfo);
+          }
+        })
+      );
+    }
+
+    await Promise.all(
+      itemInfoObject.itemInstanceInfo.stats.map(async (stat) => {
+        const statHash = stat.statHash;
+        const statInfoData = await getEntityInfo(
+          "DestinyStatDefinition",
+          statHash
+        );
+
+        let statName = statInfoData.displayProperties.name;
+
+        if (statInfoData.displayProperties.name === "Blast Radius")
+          statName = "Bl. Radius";
+
+        if (statInfoData.displayProperties.name === "Reload Speed")
+          statName = "Rl. Speed";
+
+        if (statInfoData.displayProperties.name === "Rounds Per Minute")
+          statName = "RPM";
+
+        const statInfo = {
+          name: statName,
+          description: statInfoData.displayProperties.description,
+        };
+
+        Object.assign(stat, statInfo);
+      })
     );
 
-    itemInfoObject.itemInfo.source = collectibleInfoData?.sourceString;
+    const collectibleHash = itemInfoObject?.collectibleHash;
+
+    itemInfoObject.itemInfo.source = "Source: Source not found.";
+
+    if (collectibleHash) {
+      const collectibleInfoData = await getEntityInfo(
+        "DestinyCollectibleDefinition",
+        collectibleHash
+      );
+
+      itemInfoObject.itemInfo.source = collectibleInfoData?.sourceString;
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
 

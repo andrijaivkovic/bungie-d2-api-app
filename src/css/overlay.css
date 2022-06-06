@@ -10,6 +10,12 @@
   letter-spacing: 1px;
 }
 
+.overlay__text {
+  font-size: 10px;
+  max-width: 30ch;
+  line-height: 1.75;
+}
+
 .overlay__background {
   position: absolute;
   width: 100%;
@@ -40,15 +46,20 @@
   overflow: hidden;
   padding: 2.5rem;
   gap: 1.5rem;
-  width: 375px;
+  max-width: 420px;
 }
 
-.overlay__item-view-screenshot {
-  /* background-image: url("../img/corrupted/corrupted-screenshot.jpg"); */
-  min-width: 730px;
+.overlay__item-view--item-screenshot {
+  /* background-image: url("../img/succession/succession_screenshot.jpg"); */
+  min-width: 850px;
   background-repeat: no-repeat;
   background-position: bottom right;
   background-size: cover;
+}
+
+.misc__screenshot {
+  min-width: 500px;
+  background-position: 50% right;
 }
 
 .item-view-details__header {
@@ -86,6 +97,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  justify-content: center;
 }
 
 .item-details__details--element-lvl {
@@ -96,11 +108,10 @@
 .details__element {
   display: flex;
   flex-direction: row;
-  gap: 0.25rem;
+  gap: 0.5rem;
 }
 
 .details__element img {
-  width: 20px;
   height: 20px;
 }
 
@@ -128,10 +139,14 @@
 
 .item-view-details__source {
   display: flex;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #727272;
 }
 
 .item-view-details__source--source {
   font-size: 12px;
+  font-style: italic;
+  max-width: 50ch;
 }
 
 /* ITEM STATS */
@@ -139,8 +154,7 @@
 .item-view-details__stats {
   display: flex;
   justify-content: center;
-  padding: 1.5rem 0;
-  border-top: 1px solid #727272;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid #727272;
 }
 
@@ -154,12 +168,12 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-weight: 100;
+  letter-spacing: 0;
 }
 
 .stat__name {
   text-align: right;
-  min-width: 90px;
+  min-width: 110px;
 }
 
 .stat__visual {
@@ -177,8 +191,37 @@
 }
 
 .stat__amount {
-  text-align: right;
+  text-align: left;
   min-width: 20px;
+}
+
+/* WEAPON PERKS */
+
+.item-view-details__perks {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #727272;
+}
+
+.details__perks--perks-container {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.weapon-perk {
+  background-color: #4887ba;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weapon-perk__icon {
+  height: 32px;
+  width: 32px;
+  padding: 0.5rem;
 }
 
 /* ARMOR PERK */
@@ -223,6 +266,7 @@
   display: flex;
   justify-content: space-between;
   padding: 1rem;
+  gap: 1rem;
   background-color: #4a4a4a;
 }
 
@@ -254,7 +298,7 @@
   position: relative;
   width: 40px;
   height: 40px;
-  border: 1px solid #707070;
+  border: 1px solid #909090;
 
   display: flex;
   justify-content: center;
@@ -281,8 +325,33 @@
   border: 1px solid #4a4a4a;
 }
 
+.frame {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.frame__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.frame__text--title {
+  font-size: 12px;
+}
+
+.frame__text--details {
+  font-size: 10px;
+}
+
+.frame__icon {
+  width: 42px;
+}
+
 /* WIP */
 
 .wip {
   align-self: center;
+  font-weight: 200;
+  letter-spacing: 1px;
 }

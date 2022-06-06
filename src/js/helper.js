@@ -59,7 +59,9 @@ export const getItemInstanceInfo = async function (
         `${API_URL}/${membershipType}/Profile/${membershipId}/Item/${itemInstanceId}/?components=300`
       );
 
-      const lightLevel = data.instance.data?.primaryStat?.value;
+      const lightLevel = data.instance.data?.primaryStat?.value
+        ? data.instance.data.primaryStat.value
+        : 0;
 
       return lightLevel;
     }

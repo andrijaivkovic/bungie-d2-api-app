@@ -65,14 +65,6 @@ class CharacterViewInfo extends View {
     return `${Math.floor(timePlayed / 60)}h ${timePlayed % 60}m`;
   }
 
-  _itemBorder(itemBorder) {
-    if (!itemBorder) return "";
-
-    return `
-    <img class="weapon__icon" src="${B_URL}${itemBorder}" alt="" />
-    `;
-  }
-
   _generateItemMarkup(itemsArray) {
     return itemsArray
       .map((item) => {
@@ -86,7 +78,9 @@ class CharacterViewInfo extends View {
             <img class="weapon__icon" src="https://www.bungie.net${
               item.displayProperties.icon
             }" alt="" />
-            ${this._itemBorder(item.iconWatermark)}
+            <img class="weapon__icon" src="${B_URL}${
+          item.iconWatermark
+        }" alt="" />
           </div>
           <div class="weapons__weapon--text">
             <div class="weapon__text--top">

@@ -5,7 +5,7 @@ import SearchView from "./SearchView";
 import AccountInfoView from "./AccountInfoView";
 import RefreshView from "./RefreshView";
 import CharacterInfoView from "./CharacterInfoView";
-import itemView from "./itemView";
+import ItemView from "./ItemView";
 
 const controlSearch = async function () {
   try {
@@ -72,16 +72,17 @@ const controlShowItemView = async function (
   try {
     CharacterInfoView.showItemView();
 
-    itemView.renderSpinner();
+    ItemView.renderSpinner();
 
     await model.getItemInfo(characterIndex, itemHash, itemInstanceId, itemType);
     await model.formatItemInfo(model.state.itemView);
 
-    itemView.render(model.state.itemView);
+    ItemView.render(model.state.itemView);
 
     console.log(model.state.itemView);
   } catch (error) {
-    itemView.renderError(`We couldn't load the info for the selected item.`);
+    ItemView.renderError(`We couldn't load the info for the selected item.`);
+    console.log(error);
   }
 };
 
