@@ -49,6 +49,7 @@ details about the selected items. This includes the item's icon, name, stats, pe
 2) Users can only (for now) search for players playing on Steam platform
 
 # TODO
+1) Make the App fully responsive
 1) Clean-up CSS
 2) Fully implement Item View overlay
 3) Clean-up Javascript
