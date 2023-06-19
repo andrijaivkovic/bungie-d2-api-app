@@ -11,5 +11,5 @@ export const B_URL = "https://www.bungie.net";
 export const LOCAL_PORT = 8080;
 
 // Local Server URL
-export const LOCAL_URL = `http://localhost:${LOCAL_PORT}`;
-// export const LOCAL_URL = "https://www.bungie.net";
+// export const LOCAL_URL = `http://localhost:${LOCAL_PORT}`;
+export const LOCAL_URL = "https://www.bungie.net";
