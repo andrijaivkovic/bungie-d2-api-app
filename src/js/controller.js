@@ -5,7 +5,7 @@ import SearchView from "./SearchView";
 import AccountInfoView from "./AccountInfoView";
 import RefreshView from "./RefreshView";
 import CharacterInfoView from "./CharacterInfoView";
-import ItemView from "./ItemView";
+import ItemView from "./itemView";
 
 const controlSearch = async function () {
   try {
